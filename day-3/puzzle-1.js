@@ -15,7 +15,7 @@ const puzzle1 = ({ input }) => {
           (!!(nbLine - 1) && symLine === (nbLine - 1)) ||
           (!!(nbLine + 1) && symLine === (nbLine + 1))
         ) &&
-        (symPos <= ((nbPos + (nb.length - 1)) + 1) && symPos >= (nbPos - 1))
+        (symPos <= nbPos + nb.length && symPos >= (nbPos - 1))
       ) ? sum + +nb : sum
     , 0
   );
