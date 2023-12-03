@@ -1,7 +1,7 @@
 { :ok, file_content } = File.read("./day-3/input.json")
 { :ok, input} = Jason.decode(file_content)
 
-puzzle_1 = fn (input) when is_list(input) ->
+puzzle_2 = fn (input) when is_list(input) ->
   [ nb_pos_data, sym_pos_data ] = [ ~r/[0-9]+/, ~r/[^0-9,\.]/, ] |> Enum.map(
     fn reg -> input |> Enum.with_index |> Enum.reduce(
         [], fn { str, line }, data ->
@@ -18,20 +18,20 @@ puzzle_1 = fn (input) when is_list(input) ->
     end
   )
 
-  nb_pos_data |> Enum.reduce(
-    0, fn %{ line: nb_line, pos: nb_pos, txt: nb  }, sum ->
-      sym_pos_data |> Enum.find(
-        fn %{ line: sym_line, pos: sym_pos } ->
+  sym_pos_data |> Enum.reduce(
+    0, fn %{ line: sym_line, pos: sym_pos, }, sum ->
+      nbs_near = nb_pos_data |> Enum.filter(
+        fn %{ line: nb_line, pos: nb_pos, txt: nb } ->
           ( sym_line === nb_line ||
             (!!(nb_line - 1) && sym_line === (nb_line - 1)) ||
             (!!(nb_line + 1) && sym_line === (nb_line + 1))
           ) &&
           (sym_pos <= (nb_pos +  String.length(nb)) && sym_pos >= (nb_pos - 1))
         end
-      ) &&
-      String.to_integer(nb, 10) + sum || sum
+      ) |> Enum.map(&(String.to_integer(&1[:txt], 10)))
+      length(nbs_near) === 2 && Enum.reduce(nbs_near, 1, &(&1 * &2)) + sum || sum
     end
   )
 end
 
-puzzle_1.(input) |> IO.puts
+puzzle_2.(input) |> IO.puts
