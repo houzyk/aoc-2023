@@ -5,10 +5,10 @@ defmodule Utils do
   def get_total_cards_r(wins_tally, card_nb, carry \\ [], sum \\ 1) do
     cond do
       wins_tally[card_nb] > 0 ->
-        to_carry = (
-          (String.to_integer(card_nb, 10) + 1)..((String.to_integer(card_nb, 10)) + wins_tally[card_nb])) |> Enum.map(&("#{&1}")
-        ) |> Enum.concat(carry)
-        get_total_cards_r(wins_tally, hd(to_carry), tl(to_carry) , sum + wins_tally[card_nb])
+        String.to_integer(card_nb, 10)
+        |> then(&(&1 + 1..&1 + wins_tally[card_nb]))
+        |> Enum.map(&("#{&1}")) |> Enum.concat(carry)
+        |> then(&(get_total_cards_r(wins_tally, hd(&1), tl(&1) , sum + wins_tally[card_nb])))
 
       length(carry) > 0 -> get_total_cards_r(wins_tally, hd(carry), tl(carry) , sum)
 
