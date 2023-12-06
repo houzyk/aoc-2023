@@ -6,7 +6,6 @@ puzzle_1 = fn (input) ->
   |> Enum.map(fn [seed] -> String.to_integer(seed, 10) end)
   |> Enum.reduce(
     :infinity, fn seed_nb, res ->
-      IO.puts("Seed - #{seed_nb}")
       [ "seed-to-soil",
         "soil-to-fertilizer",
         "fertilizer-to-water",
@@ -16,7 +15,6 @@ puzzle_1 = fn (input) ->
         "humidity-to-location"
       ] |> Enum.reduce(
         seed_nb, fn map, loc ->
-          IO.puts("#{seed_nb} #{map} #{loc}")
           input[map] |> Enum.reduce(%{}, fn cds, cds_dict ->
             [ dest, source, range ] = Regex.scan(~r/[0-9]+/, cds) |> Enum.map(fn [t] -> String.to_integer(t, 10) end)
             %{ [source, source + (range - 1)] => dest } |> Enum.concat(cds_dict)
